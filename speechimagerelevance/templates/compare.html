@@ -1,0 +1,141 @@
+<!-- <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Compare Files</button>
+</form> -->
+
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Upload Files and Compare with Google AI</title>
+    <style>
+        /* style for the main container */
+        .container {
+            width: 50%;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            background-color: #f2f2f2;
+        }
+
+        /* style for the form container */
+        .form-container {
+            width: 100%;
+            margin: auto;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            background-color: #ffffff;
+        }
+
+        /* style for the input fields */
+        input[type="file"] {
+            margin-top: 10px;
+            margin-bottom: 20px;
+        }
+
+        /* style for the submit button */
+        input[type="submit"] {
+            background-color: #4caf50;
+            color: white;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        /* style for the compare button */
+        #compare {
+            background-color: #008CBA;
+        }
+
+        /* style for the result container */
+        .result-container {
+            width: 100%;
+            margin-top: 20px;
+            padding: 20px;
+            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+            background-color: #ffffff;
+            display: none;
+        }
+
+        /* style for the result heading */
+        .result-heading {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* style for the result text */
+        .result-text {
+            font-size: 16px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Upload Files and Compare with Google AI</h1>
+        <div class="form-container">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <label for="audio_file">Select an audio file:</label>
+                <input type="file" id="audio_file" name="audio_file" accept="audio/*">
+                <br>
+                <label for="image_file">Select an image file:</label>
+                <input type="file" id="image_file" name="image_file" accept="image/*">
+                <br>
+                <input type="submit" value="Compare" id="compare-input">
+                <input type="submit" value="Translate Audio" id="translate-input">
+            </form>
+
+        </div>
+        <div class="result-container" id="result_container">
+            <h2 class="result-heading">Result:</h2>
+            <p class="result-text" id="result_text"></p>
+        </div>
+    </div>
+    <script>
+        // handle form submission
+        const form = document.querySelector('form');
+        form.addEventListener('submit', event => {
+            event.preventDefault();
+            const formData = new FormData(form);
+            if (event.submitter.id === 'compare-input') {
+                fetch('/compare/', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultContainer = document.querySelector('#result_container');
+                        const resultText = document.querySelector('#result_text');
+                        resultText.textContent = data.message;
+                        resultContainer.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('Error occurred during comparison.');
+                    });
+            } else if (event.submitter.id === 'translate-input') {
+                fetch('/translate/', {
+                    method: 'POST',
+                    body: formData,
+                })
+                    .then(response => response.json())
+                    .then(data => {
+                        const resultContainer = document.querySelector('#result_container');
+                        const resultText = document.querySelector('#result_text');
+                        resultText.textContent = data.message;
+                        resultContainer.style.display = 'block';
+                    })
+                    .catch(error => {
+                        console.error(error);
+                        alert('Error occurred during translation.');
+                    });
+            }
+        });
+    </script>
