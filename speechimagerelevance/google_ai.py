@@ -7,7 +7,7 @@ from google.cloud import translate_v2 as translate
 from google.cloud import language_v1 as language
 import six
 import os
-
+from pattern.text.en import singularize
 
 credential_path = "/Users/fabianbolanos/Library/CloudStorage/OneDrive-UniversidadFidélitas/Paradigmas/Proyecto/gvisionkey.json"
 os.environ['GOOGLE_APPLICATION_CREDENTIALS'] = credential_path
@@ -91,6 +91,7 @@ def transcribe_file(language, alternative_lang, speech_file):
     config = speech.RecognitionConfig(
         language_code=language,
         alternative_language_codes=alternative_lang,
+        audio_channel_count = 1
     )
 
     response = client.recognize(config=config, audio=audio)
@@ -154,14 +155,15 @@ def compare_audio_to_image(language, alternative_lang, audio, image):
     print(translation)
     # text -> entities
     entities = entities_text(translation)
-    print(entities)
+    entities_singular = [singularize(entity) for entity in entities]
+    print(entities_singular)
     # image -> labels
     labels = detect_labels(image)
     print(labels)
     # naive check for whether entities intersect with labels
     has_match = False
-    for entity in entities:
-        if entity[:-2] in labels:
+    for entity in entities_singular:
+        if entity in labels:
             print("The audio and image both contain: {}".format(entity))
             has_match = True
             message = 'The audio and image match!'
