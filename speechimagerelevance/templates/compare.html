@@ -1,8 +1,4 @@
-<!-- <form method="post" enctype="multipart/form-data">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Compare Files</button>
-</form> -->
+{% load static %}
 
 <!DOCTYPE html>
 <html>
@@ -10,92 +6,72 @@
 <head>
     <title>Upload Files and Compare with Google AI</title>
     <style>
-        /* style for the main container */
-        .container {
-            width: 50%;
-            margin: auto;
-            padding: 20px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            background-color: #f2f2f2;
-        }
-
-        /* style for the form container */
-        .form-container {
-            width: 100%;
-            margin: auto;
-            padding: 20px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            background-color: #ffffff;
-        }
-
         /* style for the input fields */
         input[type="file"] {
-            margin-top: 10px;
-            margin-bottom: 20px;
-        }
-
-        /* style for the submit button */
-        input[type="submit"] {
-            background-color: #4caf50;
-            color: white;
-            padding: 12px 20px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        /* style for the compare button */
-        #compare {
-            background-color: #008CBA;
-        }
-
-        /* style for the result container */
-        .result-container {
-            width: 100%;
-            margin-top: 20px;
-            padding: 20px;
-            box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2);
-            border-radius: 10px;
-            background-color: #ffffff;
-            display: none;
-        }
-
-        /* style for the result heading */
-        .result-heading {
-            font-size: 20px;
-            font-weight: bold;
+            margin-top: 5px;
             margin-bottom: 10px;
         }
-
-        /* style for the result text */
-        .result-text {
-            font-size: 16px;
-        }
     </style>
+    <meta charset="UTF-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>{{title}} | SIMACOSE</title>
+	<meta content="SIMACOSE" name="description" />
+	<meta content="GADAFA Solutions" name="author" />
+	<!--Extra Css-->
+	{% block extra_css %}{% endblock extra_css %}
+	<!-- Bootstrap Css -->
+	<link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+	<!-- Icons Css -->
+	<link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+	<!-- App Css-->
+	<link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+	<link rel="stylesheet" href="{% static 'css/autoComplete.min.css' %}">
+	<link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
 </head>
 
 <body>
-    <div class="container">
-        <h1>Upload Files and Compare with Google AI</h1>
-        <div class="form-container">
-            <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                <label for="audio_file">Select an audio file:</label>
-                <input type="file" id="audio_file" name="audio_file" accept="audio/*">
-                <br>
-                <label for="image_file">Select an image file:</label>
-                <input type="file" id="image_file" name="image_file" accept="image/*">
-                <br>
-                <input type="submit" value="Compare" id="compare-input">
-                <input type="submit" value="Translate Audio" id="translate-input">
-            </form>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="card">
+                    <img class="card-img-top img-fluid" src="{% static 'images/ai_background.jpeg' %}" alt="">
+                    <div class="card-body">
+                        <h1 class="card-title text-center" style="font-size: 40px">Upload Files and Compare with Google AI</h1>
+                        <hr>
+                        <form method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                            <div class="form-group">
+                                <label for="audio_file">Select an audio file:</label>
+                                <input class="form-control" type="file" id="audio_file" name="audio_file" accept="audio/*">
+                            </div>
+                            <div class="form-group">
+                                <label for="image_file">Select an image file:</label>
+                                <input class="form-control" type="file" id="image_file" name="image_file" accept="image/*">
+                            </div>                          
+                            <br>
+                            <input type="submit" class="btn btn-primary waves-effect waves-light" value="Compare" id="compare-input">
+                            <input type="submit" class="btn btn-info waves-effect waves-light" value="Translate Audio" id="translate-input">
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-2"></div>
         </div>
-        <div class="result-container" id="result_container">
-            <h2 class="result-heading">Result:</h2>
-            <p class="result-text" id="result_text"></p>
+        <div class="row">
+            <div class="col-md-2"></div>
+            <div class="col-md-8">
+                <div class="card bg-dark text-white-50">
+                    <div class="card-body" id="result_container">
+                        <h5 class="mb-4 text-white" style="font-size: 25px">Result:
+                            <i class="mdi mdi-alert-circle-outline me-3"></i>
+                        </h5>
+                        <p class="result-text" id="result_text"></p>
+                    </div>
+                </divc>
+            </div>
+            <div class="col-md-2"></div>
         </div>
     </div>
     <script>
