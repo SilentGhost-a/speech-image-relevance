@@ -16,18 +16,11 @@ def detect_labels(file):
     """Detects labels in the file."""
     client = vision.ImageAnnotatorClient()
 
-    # [START vision_python_migration_label_detection]
-    # with io.open(path, 'rb') as image_file:
-    #     content = image_file.read()
 
     image = vision.Image(content=file)
 
     response = client.label_detection(image=image)
     labels = response.label_annotations
-    # print('Labels:')
-
-    # for label in labels:
-    #     print(label.description)
 
     label_descriptions = []
     for label in labels:
@@ -36,53 +29,6 @@ def detect_labels(file):
     return label_descriptions
 
     # [END vision_python_migration_label_detection]
-# def detect_labels_uri(uri):
-#     """Detects labels in the file located in Google Cloud Storage or on the
-#     Web."""
-
-#     # create ImageAnnotatorClient object
-#     client = vision.ImageAnnotatorClient()
-
-#     # create Image object
-#     image = vision.Image()
-
-#     # specify location of image
-#     image.source.image_uri = uri
-
-#     # get label_detection response by passing image to client
-#     response = client.label_detection(image=image)
-
-#     # get label_annotations portion of response
-#     labels = response.label_annotations
-
-#     # we only need the label descriptions
-#     label_descriptions = []
-#     for label in labels:
-#         label_descriptions.append(label.description.lower())
-
-#     return label_descriptions
-
-
-# def transcribe_gcs(language, gcs_uri):
-#     """Transcribes the audio file specified by the gcs_uri."""
-
-#     # create ImageAnnotatorClient object
-#     client = speech.SpeechClient()
-
-#     # specify location of speech
-#     audio = speech.RecognitionAudio(uri=gcs_uri)  # need to specify speech.types
-
-#     # set language to Turkish
-#     # removed encoding and sample_rate_hertz
-#     config = speech.RecognitionConfig(
-#         language_code=language
-#     )  # need to specify speech.types
-
-#     # get response by passing config and audio settings to client
-#     response = client.recognize(config=config, audio=audio)
-
-#     # naive assumption that audio file is short
-#     return response.results[0].alternatives[0].transcript
 
 def transcribe_file(language, alternative_lang, speech_file):
     """Transcribe the given audio file."""
@@ -176,12 +122,3 @@ def translate_audio(language, alternative_lang, audio):
     transcription = transcribe_file(language, alternative_lang, audio)
     translation = translate_text("es", transcription)
     return translation
-# if __name__ == "__main__":
-#     parser = argparse.ArgumentParser(
-#         description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter
-#     )
-#     parser.add_argument("language", help="Language code of speech audio")
-#     parser.add_argument("audio", help="GCS path for audio file to be recognised")
-#     parser.add_argument("image", help="GCS path for image file to be analysed")
-#     args = parser.parse_args()
-#     compare_audio_to_image(args.language, args.audio, args.image)

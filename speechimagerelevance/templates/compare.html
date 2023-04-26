@@ -4,7 +4,7 @@
 <html>
 
 <head>
-    <title>Upload Files and Compare with Google AI</title>
+    <title>AI Paradigmas</title>
     <style>
         /* style for the input fields */
         input[type="file"] {
@@ -13,21 +13,20 @@
         }
     </style>
     <meta charset="UTF-8">
-	<meta http-equiv="X-UA-Compatible" content="IE=edge">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>{{title}} | SIMACOSE</title>
-	<meta content="SIMACOSE" name="description" />
-	<meta content="GADAFA Solutions" name="author" />
-	<!--Extra Css-->
-	{% block extra_css %}{% endblock extra_css %}
-	<!-- Bootstrap Css -->
-	<link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
-	<!-- Icons Css -->
-	<link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
-	<!-- App Css-->
-	<link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
-	<link rel="stylesheet" href="{% static 'css/autoComplete.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/iziToast.min.css' %}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Paradigmas</title>
+    <meta content="AI Paradigmas" name="description" />
+    <meta content="GADAFA Solutions" name="author" />
+    <!--Extra Css-->
+    {% block extra_css %}{% endblock extra_css %}
+    <!-- Bootstrap Css -->
+    <link href="{% static 'css/bootstrap.min.css' %}" id="bootstrap-style" rel="stylesheet" type="text/css" />
+    <!-- Icons Css -->
+    <link href="{% static 'css/icons.min.css' %}" rel="stylesheet" type="text/css" />
+    <!-- App Css-->
+    <link href="{% static 'css/app.min.css' %}" id="app-style" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/aiparadigmas.css' %}">
 </head>
 
 <body>
@@ -38,21 +37,26 @@
                 <div class="card">
                     <img class="card-img-top img-fluid" src="{% static 'images/ai_background.jpeg' %}" alt="">
                     <div class="card-body">
-                        <h1 class="card-title text-center" style="font-size: 40px">Upload Files and Compare with Google AI</h1>
+                        <h1 class="card-title text-center" style="font-size: 40px">Compare Images and Audio with Google
+                            AI</h1>
                         <hr>
                         <form method="post" enctype="multipart/form-data">
                             {% csrf_token %}
                             <div class="form-group">
                                 <label for="audio_file">Select an audio file:</label>
-                                <input class="form-control" type="file" id="audio_file" name="audio_file" accept="audio/*">
+                                <input class="form-control" type="file" id="audio_file" name="audio_file"
+                                    accept="audio/*">
                             </div>
                             <div class="form-group">
                                 <label for="image_file">Select an image file:</label>
-                                <input class="form-control" type="file" id="image_file" name="image_file" accept="image/*">
-                            </div>                          
+                                <input class="form-control" type="file" id="image_file" name="image_file"
+                                    accept="image/*">
+                            </div>
                             <br>
-                            <input type="submit" class="btn btn-primary waves-effect waves-light" value="Compare" id="compare-input">
-                            <input type="submit" class="btn btn-info waves-effect waves-light" value="Translate Audio" id="translate-input">
+                            <input type="submit" class="btn btn-primary waves-effect waves-light" value="Compare"
+                                id="compare-input">
+                            <input type="submit" class="btn btn-info waves-effect waves-light" value="Translate Audio"
+                                id="translate-input">
                         </form>
                     </div>
                 </div>
@@ -69,49 +73,51 @@
                         </h5>
                         <p class="result-text" id="result_text"></p>
                     </div>
-                </divc>
+                    </divc>
+                </div>
+                <div class="col-md-2"></div>
             </div>
-            <div class="col-md-2"></div>
         </div>
+        <script>
+            // handle form submission
+            const form = document.querySelector('form');
+            form.addEventListener('submit', event => {
+                event.preventDefault();
+                const formData = new FormData(form);
+                if (event.submitter.id === 'compare-input') {
+                    fetch('/compare/', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const resultContainer = document.querySelector('#result_container');
+                            const resultText = document.querySelector('#result_text');
+                            resultText.textContent = data.message;
+                            resultContainer.style.display = 'block';
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert('Error occurred during comparison.');
+                        });
+                } else if (event.submitter.id === 'translate-input') {
+                    fetch('/translate/', {
+                        method: 'POST',
+                        body: formData,
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            const resultContainer = document.querySelector('#result_container');
+                            const resultText = document.querySelector('#result_text');
+                            resultText.textContent = data.message;
+                            resultContainer.style.display = 'block';
+                        })
+                        .catch(error => {
+                            console.error(error);
+                            alert('Error occurred during translation.');
+                        });
+                }
+            });
+        </script>
     </div>
-    <script>
-        // handle form submission
-        const form = document.querySelector('form');
-        form.addEventListener('submit', event => {
-            event.preventDefault();
-            const formData = new FormData(form);
-            if (event.submitter.id === 'compare-input') {
-                fetch('/compare/', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const resultContainer = document.querySelector('#result_container');
-                        const resultText = document.querySelector('#result_text');
-                        resultText.textContent = data.message;
-                        resultContainer.style.display = 'block';
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert('Error occurred during comparison.');
-                    });
-            } else if (event.submitter.id === 'translate-input') {
-                fetch('/translate/', {
-                    method: 'POST',
-                    body: formData,
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        const resultContainer = document.querySelector('#result_container');
-                        const resultText = document.querySelector('#result_text');
-                        resultText.textContent = data.message;
-                        resultContainer.style.display = 'block';
-                    })
-                    .catch(error => {
-                        console.error(error);
-                        alert('Error occurred during translation.');
-                    });
-            }
-        });
-    </script>
+</body>
