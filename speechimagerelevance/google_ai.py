@@ -106,7 +106,7 @@ def compare_audio_to_image(language, alternative_lang, audio, image):
     # image -> labels
     labels = detect_labels(image)
     print(labels)
-    # naive check for whether entities intersect with labels
+    
     has_match = False
     for entity in entities_singular:
         if entity in labels:
